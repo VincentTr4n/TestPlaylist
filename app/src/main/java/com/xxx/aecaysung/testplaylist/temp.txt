@@ -1,0 +1,79 @@
+// 548 - /storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac
+                // 1000019243
+
+//                val playListUri = Audio.Playlists.Members.getContentUri("external", 1000019243)
+//                val contentValues = ContentValues()
+//
+//                contentValues.put(Audio.Playlists.Members.AUDIO_ID, getAudioByPath("/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac"))
+//                contentValues.put(Audio.Playlists.Members.PLAY_ORDER, 1)
+////
+//                val inserted = contentResolver.insert(playListUri, contentValues)
+//                Log.d("tran.dc", "uri: $inserted")
+
+                val audios = listOf(
+                    "/storage/emulated/0/MyMusic/Folder 1/Test1.flac",
+                    "/storage/emulated/0/MyMusic/Folder 1/Test2.flac",
+                    "/storage/emulated/0/MyMusic/Folder 1/Test3.flac",
+                    "/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3"
+                )
+
+
+                val playlistFile = File("/storage/emulated/0/Music/Playlist 007.m3u")
+
+//                playlistFile.readLines().forEach {
+//                    Log.d("tran.dc", it)
+//                }
+                Log.d("tran.dc", "===================================")
+                playlistFile.delete()
+                delay(100)
+                PrintWriter(playlistFile).use { out ->
+                    out.println("#EXTM3U")
+                    audios.forEach { path ->
+                        val line = if (path.startsWith(DEFAULT_MUSIC_PATH)) {
+                            path.substring(DEFAULT_MUSIC_PATH.length + 1)
+                        } else {
+                            "../${path.substring(DEFAULT_ROOT_PATH.length + 1)}"
+                        }
+                        out.println(line)
+                    }
+                }
+
+                MediaScannerConnection.scanFile(this@MainActivity, arrayOf(playlistFile.absolutePath), null) { path, uri ->
+                    Log.d("tran.dc", "Scanned $path:")
+                    Log.d("tran.dc", "-> uri=$uri")
+
+                    val uri = Audio.Playlists.EXTERNAL_CONTENT_URI
+                    val projection = arrayOf(
+                        Audio.Playlists._ID,
+                        Audio.Playlists.NAME,
+                        Audio.Playlists.DATA
+                    )
+
+                    Log.d("tran.dc", "===================================")
+
+
+                    contentResolver.query(uri, projection, null, null, null)?.use { c ->
+                        while (c.moveToNext()) {
+                            val id = c.getLong(0)
+                            val name = c.getString(1)
+                            val path = c.getString(2)
+                            Log.d("tran.dc", "id: $id, name: $name => path: $path")
+                            loadAudios(id)
+                        }
+                    }
+                }
+
+
+
+                /*
+                    #EXTM3U
+                    ../MyMusic/RecordOfRagnarok/great loser - Record of Ragnarok OST.mp3
+                    The Last of Us Part II Original Soundtrack/19_Masks_On.mp3
+                    The Last of Us Part II Original Soundtrack/18_A_Wolf's_Ghost.mp3
+                    The Last of Us Part II Original Soundtrack/25_All_Gone_(The_Promises).mp3
+                     */
+
+
+
+
+                {"playlists":[{"audios":["/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac"],"name":"123"},{"audios":[],"name":"Test"},{"audios":["/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac","/storage/emulated/0/Music/Music/Linkin+Park+-+07+Faint(music.naij.com).mp3","/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac","/storage/emulated/0/Music/Music/Linkin+Park+-+07+Faint(music.naij.com).mp3"],"name":"Playlist 001"},{"audios":[],"name":"Playlist 002"},{"audios":["/storage/emulated/0/Music/Music/1973 - James Blunt.mp3","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Bắc Đảo Thi_-1078206774.flac","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Hắc Kỳ Tử_-1078203165.mp3","/storage/emulated/0/MyMusic/9420_Mạch Tiểu Đâu_-1078113628.flac"],"name":"Playlist 003"},{"audios":["/storage/emulated/0/MyMusic/9420_Mạch Tiểu Đâu_-1078113628.flac","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Hắc Kỳ Tử_-1078203165.mp3","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Bắc Đảo Thi_-1078206774.flac","/storage/emulated/0/Music/Music/1973 - James Blunt.mp3"],"name":"Playlist 004"},{"audios":["/storage/emulated/0/MyMusic/9420_Mạch Tiểu Đâu_-1078113628.flac","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Hắc Kỳ Tử_-1078203165.mp3","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Bắc Đảo Thi_-1078206774.flac","/storage/emulated/0/Music/Music/1973 - James Blunt.mp3"],"name":"Playlist 004 (1)"},{"audios":["/storage/emulated/0/Music/Music/1973 - James Blunt.mp3","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Bắc Đảo Thi_-1078206774.flac","/storage/emulated/0/MyMusic/9277 (Thích Hôn)_Hắc Kỳ Tử_-1078203165.mp3","/storage/emulated/0/MyMusic/9420_Mạch Tiểu Đâu_-1078113628.flac"],"name":"Playlist 003 (1)"},{"audios":["/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac","/storage/emulated/0/Music/Music/Linkin+Park+-+07+Faint(music.naij.com).mp3","/storage/emulated/0/MyMusic/38 Độ 6 38度6_Hắc Long_-1078348499.flac","/storage/emulated/0/Music/Music/Linkin+Park+-+07+Faint(music.naij.com).mp3"],"name":"Playlist 001 (1)"},{"audios":["/storage/emulated/0/MyMusic/Folder 1/Test1.flac","/storage/emulated/0/MyMusic/Folder 1/Test2.flac","/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3"],"name":"Playlist 006"},{"audios":["/storage/emulated/0/MyMusic/Folder 1/Test1.flac","/storage/emulated/0/MyMusic/Folder 1/Test2.flac","/storage/emulated/0/Music/Samsung/Over_the_Horizon.mp3"],"name":"Playlist 007"}]}
